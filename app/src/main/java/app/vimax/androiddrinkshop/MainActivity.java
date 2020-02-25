@@ -3,6 +3,7 @@ package app.vimax.androiddrinkshop;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
                 startLoginPage();
             }
         });
+
+        startLoginPage();
     }
 
     private void startLoginPage() {
@@ -56,8 +59,23 @@ public class MainActivity extends AppCompatActivity {
                         alertDialog.dismiss();
 
                         if (userResponse.isExists()) {
-                            // if user already exists, just start new Activity
+                            //Fetch information
+                            mService.getUserInformation(TEST_PHONE)
+                                    .enqueue(new Callback<User>() {
+                                        @Override
+                                        public void onResponse(Call<User> call, Response<User> response) {
+                                            Common.currentUser = response.body();
 
+                                            // if user already exists, just start new Activity
+                                            startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<User> call, Throwable t) {
+                                            Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         } else {
                             // else, need register
                             showRegisterDialog(TEST_PHONE);
@@ -124,7 +142,10 @@ public class MainActivity extends AppCompatActivity {
                                 User user = response.body();
                                 if (TextUtils.isEmpty(user.getError_msg())){
                                     Toast.makeText(MainActivity.this, "User register seccessfully", Toast.LENGTH_SHORT).show();
+                                    Common.currentUser = response.body();
                                     // Start new activity
+                                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                                    finish();
                                 }
                             }
 
