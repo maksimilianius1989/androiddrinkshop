@@ -89,6 +89,10 @@ public class HomeActivity extends AppCompatActivity {
                 .setDrawerLayout(drawer)
                 .build();
 
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
         View headerView = navigationView.getHeaderView(0);
         txt_name = (TextView) headerView.findViewById(R.id.txt_name);
         txt_phone = (TextView) headerView.findViewById(R.id.txt_phone);
@@ -113,6 +117,13 @@ public class HomeActivity extends AppCompatActivity {
                         displayMenu(categories);
                     }
                 }));
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 
     private void displayMenu(List<Category> categories) {
