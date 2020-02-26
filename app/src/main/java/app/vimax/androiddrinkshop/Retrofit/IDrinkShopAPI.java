@@ -4,6 +4,7 @@ import java.util.List;
 import app.vimax.androiddrinkshop.Model.Banner;
 import app.vimax.androiddrinkshop.Model.Category;
 import app.vimax.androiddrinkshop.Model.CheckUserResponse;
+import app.vimax.androiddrinkshop.Model.Drink;
 import app.vimax.androiddrinkshop.Model.User;
 import io.reactivex.Observable;
 import retrofit2.Call;
@@ -33,4 +34,8 @@ public interface IDrinkShopAPI {
 
     @GET("getmenu.php")
     Observable<List<Category>> getMenu();
+
+    @FormUrlEncoded
+    @POST("getdrink.php")
+    Call<Drink> getDrink(@Field("menuid") String menuID);
 }
