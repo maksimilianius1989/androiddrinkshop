@@ -2,6 +2,7 @@ package app.vimax.androiddrinkshop.Retrofit;
 
 import java.util.List;
 import app.vimax.androiddrinkshop.Model.Banner;
+import app.vimax.androiddrinkshop.Model.Category;
 import app.vimax.androiddrinkshop.Model.CheckUserResponse;
 import app.vimax.androiddrinkshop.Model.User;
 import io.reactivex.Observable;
@@ -29,4 +30,7 @@ public interface IDrinkShopAPI {
 
     @GET("getbanner.php")
     Observable<List<Banner>> getBanners();
+
+    @GET("getmenu.php")
+    Observable<List<Category>> getMenu();
 }

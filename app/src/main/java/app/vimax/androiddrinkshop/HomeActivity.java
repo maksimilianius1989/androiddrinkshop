@@ -22,6 +22,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
 import android.widget.TextView;
@@ -31,7 +33,9 @@ import org.w3c.dom.Text;
 import java.util.HashMap;
 import java.util.List;
 
+import app.vimax.androiddrinkshop.Adapter.CategoryAdapter;
 import app.vimax.androiddrinkshop.Model.Banner;
+import app.vimax.androiddrinkshop.Model.Category;
 import app.vimax.androiddrinkshop.Retrofit.IDrinkShopAPI;
 import app.vimax.androiddrinkshop.Utils.Common;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -48,6 +52,8 @@ public class HomeActivity extends AppCompatActivity {
 
     IDrinkShopAPI mService;
 
+    RecyclerView lst_menu;
+
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
@@ -58,6 +64,10 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mService = Common.getAPI();
+
+        lst_menu = (RecyclerView) findViewById(R.id.lst_menu);
+        lst_menu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        lst_menu.setHasFixedSize(true);
 
         sliderLayout = (SliderLayout) findViewById(R.id.slider);
 
@@ -78,9 +88,6 @@ public class HomeActivity extends AppCompatActivity {
                 R.id.nav_tools, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
 
         View headerView = navigationView.getHeaderView(0);
         txt_name = (TextView) headerView.findViewById(R.id.txt_name);
@@ -91,6 +98,26 @@ public class HomeActivity extends AppCompatActivity {
 
         // get banner
         getBannerImage();
+
+        // get menu
+        getMenu();
+    }
+
+    private void getMenu() {
+        compositeDisposable.add(mService.getMenu()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Category>>() {
+                    @Override
+                    public void accept(List<Category> categories) throws Exception {
+                        displayMenu(categories);
+                    }
+                }));
+    }
+
+    private void displayMenu(List<Category> categories) {
+        CategoryAdapter adapter = new CategoryAdapter(this, categories);
+        lst_menu.setAdapter(adapter);
     }
 
     private void getBannerImage() {
@@ -132,12 +159,5 @@ public class HomeActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
     }
 }
