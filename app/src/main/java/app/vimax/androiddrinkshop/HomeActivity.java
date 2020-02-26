@@ -2,9 +2,13 @@ package app.vimax.androiddrinkshop;
 
 import android.os.Bundle;
 
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Base64;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -24,13 +28,27 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.List;
+
+import app.vimax.androiddrinkshop.Model.Banner;
+import app.vimax.androiddrinkshop.Retrofit.IDrinkShopAPI;
 import app.vimax.androiddrinkshop.Utils.Common;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class HomeActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
     TextView txt_name, txt_phone;
+    SliderLayout sliderLayout;
+
+    IDrinkShopAPI mService;
+
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +56,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mService = Common.getAPI();
+
+        sliderLayout = (SliderLayout) findViewById(R.id.slider);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +88,43 @@ public class HomeActivity extends AppCompatActivity {
 
         txt_name.setText(Common.currentUser.getName());
         txt_phone.setText(Common.currentUser.getPhone());
+
+        // get banner
+        getBannerImage();
+    }
+
+    private void getBannerImage() {
+        compositeDisposable.add(mService.getBanners()
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Consumer<List<Banner>>() {
+                                        @Override
+                                        public void accept(List<Banner> banners) throws Exception {
+                                            displayImage(banners);
+                                        }
+                                    }));
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
+    }
+
+    private void displayImage(List<Banner> banners) {
+        HashMap<String, String> bannerMap = new HashMap<>();
+        for (Banner item:banners) {
+            bannerMap.put(item.getName(), item.getLink());
+        }
+
+        for (String name:bannerMap.keySet()) {
+            TextSliderView textSliderView = new TextSliderView(this);
+            textSliderView.description(name)
+                    .image(bannerMap.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
+
+            sliderLayout.addSlider(textSliderView);
+        }
     }
 
     @Override
