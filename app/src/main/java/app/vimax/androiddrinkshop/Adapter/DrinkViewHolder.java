@@ -1,6 +1,7 @@
 package app.vimax.androiddrinkshop.Adapter;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,8 @@ public class DrinkViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     IItemClickListener itemClickListener;
 
+    Button btn_add_to_cart;
+
     public void setItemClickListener(IItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
@@ -26,6 +29,7 @@ public class DrinkViewHolder extends RecyclerView.ViewHolder implements View.OnC
         img_product = (ImageView) itemView.findViewById(R.id.image_product);
         txt_drink_name = (TextView) itemView.findViewById(R.id.text_drink_name);
         txt_price = (TextView) itemView.findViewById(R.id.text_price);
+        btn_add_to_cart = (Button) itemView.findViewById(R.id.btn_add_cart);
 
         itemView.setOnClickListener(this);
     }
