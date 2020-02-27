@@ -34,6 +34,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import app.vimax.androiddrinkshop.Adapter.CategoryAdapter;
+import app.vimax.androiddrinkshop.Database.DataSource.CartRepository;
+import app.vimax.androiddrinkshop.Database.Local.CartDataBase;
+import app.vimax.androiddrinkshop.Database.Local.CartDataSource;
 import app.vimax.androiddrinkshop.Model.Banner;
 import app.vimax.androiddrinkshop.Model.Category;
 import app.vimax.androiddrinkshop.Model.Drink;
@@ -109,6 +112,14 @@ public class HomeActivity extends AppCompatActivity {
 
         //save newest Topping List
         getToppingList();
+
+        //Init Database
+        initDB();
+    }
+
+    private void initDB() {
+        Common.cartDataBase = CartDataBase.getInstance(this);
+        Common.cartRepository = CartRepository.getInstance(CartDataSource.getInstance(Common.cartDataBase.cartDAO()));
     }
 
     private void getToppingList() {

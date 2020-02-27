@@ -3,6 +3,8 @@ package app.vimax.androiddrinkshop.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.vimax.androiddrinkshop.Database.DataSource.CartRepository;
+import app.vimax.androiddrinkshop.Database.Local.CartDataBase;
 import app.vimax.androiddrinkshop.Model.Category;
 import app.vimax.androiddrinkshop.Model.Drink;
 import app.vimax.androiddrinkshop.Model.User;
@@ -26,6 +28,10 @@ public class Common {
     public static int sizeOfCup = -1; // -1: no choose (error), 0 : M, 1 : L
     public static int sugar = -1; // -1 : no choose (error)
     public static int ice = -1;
+
+    //Database
+    public static CartDataBase cartDataBase;
+    public static CartRepository cartRepository;
 
     public static IDrinkShopAPI getAPI()
     {
