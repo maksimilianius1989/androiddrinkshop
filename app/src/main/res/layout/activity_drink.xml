@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bgone"
     android:weightSum="8"
     android:orientation="vertical"
     tools:context=".DrinkActivity">
@@ -15,10 +14,30 @@
         android:layout_height="0dp">
 
         <ImageView
+            android:background="@drawable/drink_view"
             android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <TextView
+            android:id="@+id/txt_menu_name"
+            android:text="Original Tea"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:id="@+id/recycler_drinks"
+        android:layout_margin="8dp" />
 
 </LinearLayout>

@@ -37,5 +37,5 @@ public interface IDrinkShopAPI {
 
     @FormUrlEncoded
     @POST("getdrink.php")
-    Call<Drink> getDrink(@Field("menuid") String menuID);
+    Observable<List<Drink>> getDrink(@Field("menuid") String menuID);
 }
