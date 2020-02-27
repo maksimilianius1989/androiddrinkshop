@@ -36,6 +36,7 @@ import java.util.List;
 import app.vimax.androiddrinkshop.Adapter.CategoryAdapter;
 import app.vimax.androiddrinkshop.Model.Banner;
 import app.vimax.androiddrinkshop.Model.Category;
+import app.vimax.androiddrinkshop.Model.Drink;
 import app.vimax.androiddrinkshop.Retrofit.IDrinkShopAPI;
 import app.vimax.androiddrinkshop.Utils.Common;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -105,6 +106,21 @@ public class HomeActivity extends AppCompatActivity {
 
         // get menu
         getMenu();
+
+        //save newest Topping List
+        getToppingList();
+    }
+
+    private void getToppingList() {
+        compositeDisposable.add(mService.getDrink(Common.TOPPING_MENU_ID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Drink>>() {
+                    @Override
+                    public void accept(List<Drink> drinks) throws Exception {
+                        Common.toppingList = drinks;
+                    }
+                }));
     }
 
     private void getMenu() {
