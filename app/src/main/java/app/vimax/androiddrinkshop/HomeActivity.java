@@ -9,6 +9,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.util.Base64;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -17,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.nex3z.notificationbadge.NotificationBadge;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -57,6 +59,8 @@ public class HomeActivity extends AppCompatActivity {
     IDrinkShopAPI mService;
 
     RecyclerView lst_menu;
+
+    NotificationBadge badge;
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -195,7 +199,43 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.menu_action_bar, menu);
+        View view = menu.findItem(R.id.cart_menu).getActionView();
+        badge = (NotificationBadge) view.findViewById(R.id.badge);
+        updateCartCount();
         return true;
+    }
+
+    private void updateCartCount() {
+        if (badge == null) return;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (Common.cartRepository.countCartItems() == 0)
+                    badge.setVisibility(View.INVISIBLE);
+                else {
+                    badge.setVisibility(View.VISIBLE);
+                    badge.setText(String.valueOf(Common.cartRepository.countCartItems()));
+                }
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.cart_menu)
+            return true;
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateCartCount();
     }
 }
