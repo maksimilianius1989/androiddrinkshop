@@ -12,7 +12,7 @@ import app.vimax.androiddrinkshop.Retrofit.IDrinkShopAPI;
 import app.vimax.androiddrinkshop.Retrofit.RetrofitClient;
 
 public class Common {
-    private static final String BASE_URL = "http://wos.kl.com.ua";
+    public static final String BASE_URL = "http://wos.kl.com.ua/";
 
     public static final String TOPPING_MENU_ID = "2";
 
