@@ -3,6 +3,7 @@ package app.vimax.androiddrinkshop.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import app.vimax.androiddrinkshop.Database.ModelDB.Cart;
+import app.vimax.androiddrinkshop.Database.ModelDB.Favorite;
 import app.vimax.androiddrinkshop.Interface.IItemClickListener;
 import app.vimax.androiddrinkshop.Model.Drink;
 import app.vimax.androiddrinkshop.R;
@@ -47,7 +49,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DrinkViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final DrinkViewHolder holder, final int position) {
         holder.txt_price.setText(new StringBuilder("$").append(drinkList.get(position).Price.toString()));
         holder.txt_drink_name.setText(drinkList.get(position).Name);
 
@@ -68,6 +70,39 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkViewHolder> {
                 Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
+
+        //favorite system
+        if (Common.favoriteRepository.isFavorite(Integer.parseInt(drinkList.get(position).ID)) == 1)
+            holder.btn_favorites.setImageResource(R.drawable.ic_favorite_white_24dp);
+        else
+            holder.btn_favorites.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+
+        holder.btn_favorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Common.favoriteRepository.isFavorite(Integer.parseInt(drinkList.get(position).ID)) != 1) {
+                    addOrRemoveFavorite(drinkList.get(position), true);
+                    holder.btn_favorites.setImageResource(R.drawable.ic_favorite_white_24dp);
+                } else {
+                    addOrRemoveFavorite(drinkList.get(position), false);
+                    holder.btn_favorites.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                }
+            }
+        });
+    }
+
+    private void addOrRemoveFavorite(Drink drink, boolean isAdd) {
+        Favorite favorite = new Favorite();
+        favorite.id = drink.ID;
+        favorite.link = drink.Link;
+        favorite.name = drink.Name;
+        favorite.price = drink.Price;
+        favorite.menuId = drink.MenuId;
+
+        if (isAdd)
+            Common.favoriteRepository.insertFav(favorite);
+        else
+            Common.favoriteRepository.delete(favorite);
     }
 
     private void showAddToCartDialog(final int position) {

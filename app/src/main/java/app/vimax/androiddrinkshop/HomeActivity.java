@@ -367,6 +367,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             });
 
             builder.show();
+        } else if(id == R.id.nav_favorite) {
+            startActivity(new Intent(HomeActivity.this, FavoriteListActivity.class));
         }
 
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
