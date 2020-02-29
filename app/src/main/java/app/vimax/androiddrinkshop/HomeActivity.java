@@ -47,8 +47,10 @@ import java.util.List;
 
 import app.vimax.androiddrinkshop.Adapter.CategoryAdapter;
 import app.vimax.androiddrinkshop.Database.DataSource.CartRepository;
-import app.vimax.androiddrinkshop.Database.Local.CartDataBase;
+import app.vimax.androiddrinkshop.Database.DataSource.FavoriteRepository;
+import app.vimax.androiddrinkshop.Database.Local.EDMTRoomDatabase;
 import app.vimax.androiddrinkshop.Database.Local.CartDataSource;
+import app.vimax.androiddrinkshop.Database.Local.FavoriteDataSource;
 import app.vimax.androiddrinkshop.Model.Banner;
 import app.vimax.androiddrinkshop.Model.Category;
 import app.vimax.androiddrinkshop.Model.Drink;
@@ -65,7 +67,6 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Multipart;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, UploadCallBack {
 
@@ -224,8 +225,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initDB() {
-        Common.cartDataBase = CartDataBase.getInstance(this);
-        Common.cartRepository = CartRepository.getInstance(CartDataSource.getInstance(Common.cartDataBase.cartDAO()));
+        Common.edmtRoomDatabase = EDMTRoomDatabase.getInstance(this);
+        Common.cartRepository = CartRepository.getInstance(CartDataSource.getInstance(Common.edmtRoomDatabase.cartDAO()));
+        Common.favoriteRepository = FavoriteRepository.getInstance(FavoriteDataSource.getInstance(Common.edmtRoomDatabase.favoriteDAO()));
     }
 
     private void getToppingList() {

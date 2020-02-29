@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.vimax.androiddrinkshop.Database.DataSource.CartRepository;
-import app.vimax.androiddrinkshop.Database.Local.CartDataBase;
+import app.vimax.androiddrinkshop.Database.DataSource.FavoriteRepository;
+import app.vimax.androiddrinkshop.Database.Local.EDMTRoomDatabase;
 import app.vimax.androiddrinkshop.Model.Category;
 import app.vimax.androiddrinkshop.Model.Drink;
 import app.vimax.androiddrinkshop.Model.User;
@@ -30,8 +31,9 @@ public class Common {
     public static int ice = -1;
 
     //Database
-    public static CartDataBase cartDataBase;
+    public static EDMTRoomDatabase edmtRoomDatabase;
     public static CartRepository cartRepository;
+    public static FavoriteRepository favoriteRepository;
 
     public static IDrinkShopAPI getAPI()
     {
