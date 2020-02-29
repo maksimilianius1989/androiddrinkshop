@@ -1,5 +1,6 @@
 package app.vimax.androiddrinkshop;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.daimajia.slider.library.SliderLayout;
@@ -28,12 +29,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import app.vimax.androiddrinkshop.Adapter.CategoryAdapter;
 import app.vimax.androiddrinkshop.Database.DataSource.CartRepository;
@@ -61,6 +64,7 @@ public class HomeActivity extends AppCompatActivity {
     RecyclerView lst_menu;
 
     NotificationBadge badge;
+    ImageView cart_icon;
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -202,6 +206,13 @@ public class HomeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_action_bar, menu);
         View view = menu.findItem(R.id.cart_menu).getActionView();
         badge = (NotificationBadge) view.findViewById(R.id.badge);
+        cart_icon = (ImageView) view.findViewById(R.id.cart_icon);
+        cart_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this, CartActivity.class));
+            }
+        });
         updateCartCount();
         return true;
     }
