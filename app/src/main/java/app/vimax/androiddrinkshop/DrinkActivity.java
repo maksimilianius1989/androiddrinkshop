@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -61,5 +62,24 @@ public class DrinkActivity extends AppCompatActivity {
     private void displayDrinkList(List<Drink> drinks) {
         DrinkAdapter adapter = new DrinkAdapter(this, drinks);
         lst_drink.setAdapter(adapter);
+    }
+
+    //Exit Application when click Back button
+    boolean isBackButtonClicked = false;
+
+    @Override
+    public void onBackPressed() {
+        if (isBackButtonClicked) {
+            super.onBackPressed();
+            return;
+        }
+        isBackButtonClicked = true;
+        Toast.makeText(this, "Please click back again to exit", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isBackButtonClicked = false;
     }
 }

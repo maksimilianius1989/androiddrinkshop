@@ -188,4 +188,23 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
+    //Exit Application when click Back button
+    boolean isBackButtonClicked = false;
+
+    @Override
+    public void onBackPressed() {
+        if (isBackButtonClicked) {
+            super.onBackPressed();
+            return;
+        }
+        this.isBackButtonClicked = true;
+        Toast.makeText(this, "Please click back again to exit", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        isBackButtonClicked = false;
+        super.onResume();
+    }
 }

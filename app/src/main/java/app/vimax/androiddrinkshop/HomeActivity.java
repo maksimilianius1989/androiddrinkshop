@@ -1,6 +1,8 @@
 package app.vimax.androiddrinkshop;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -64,7 +67,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Multipart;
 
-public class HomeActivity extends AppCompatActivity implements UploadCallBack {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, UploadCallBack {
 
     private static final int PICK_FILE_REQUEST = 1222;
     private AppBarConfiguration mAppBarConfiguration;
@@ -108,7 +111,9 @@ public class HomeActivity extends AppCompatActivity implements UploadCallBack {
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -120,6 +125,9 @@ public class HomeActivity extends AppCompatActivity implements UploadCallBack {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(this);
 
         View headerView = navigationView.getHeaderView(0);
         txt_name = (TextView) headerView.findViewById(R.id.txt_name);
@@ -324,12 +332,80 @@ public class HomeActivity extends AppCompatActivity implements UploadCallBack {
         });
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        Toast.makeText(this, "Click", Toast.LENGTH_SHORT).show();
+
+        int id = item.getItemId();
+
+        if (id == R.id.nav_sign_out) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Exit Application");
+            builder.setMessage("Do you want to exit this application");
+
+            builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //TODO exit from application
+
+                    // clear all
+                    Intent intent = new Intent(HomeActivity.this , MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            builder.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+
+            builder.show();
+        }
+
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.cart_menu)
-            return true;
+        if (id == R.id.nav_sign_out) {
+            //create confirm dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Exit Application");
+            builder.setMessage("Do you want to exit this application?");
+
+            builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //TODO EXIT
+
+                    //clear all activity
+                    Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            builder.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+
+            //don't forget to show dialog
+            builder.show();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -338,10 +414,24 @@ public class HomeActivity extends AppCompatActivity implements UploadCallBack {
     protected void onResume() {
         super.onResume();
         updateCartCount();
+        isBackButtonClicked = false;
     }
 
     @Override
     public void onProgressUpdate(int pertantage) {
 
+    }
+
+    //Exit Application when click Back button
+    boolean isBackButtonClicked = false;
+
+    @Override
+    public void onBackPressed() {
+        if (isBackButtonClicked) {
+            super.onBackPressed();
+            return;
+        }
+        this.isBackButtonClicked = true;
+        Toast.makeText(this, "Please click back again to exit", Toast.LENGTH_SHORT).show();
     }
 }

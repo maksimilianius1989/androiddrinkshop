@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -70,5 +71,25 @@ public class CartActivity extends AppCompatActivity {
     protected void onStop() {
         compositeDisposable.clear();
         super.onStop();
+    }
+
+
+    //Exit Application when click Back button
+    boolean isBackButtonClicked = false;
+
+    @Override
+    public void onBackPressed() {
+        if (isBackButtonClicked) {
+            super.onBackPressed();
+            return;
+        }
+        isBackButtonClicked = true;
+        Toast.makeText(this, "Please click back again to exit", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isBackButtonClicked = false;
     }
 }
