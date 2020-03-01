@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/bgtwo"
     android:padding="8dp"
-    tools:context=".CartActivity">
+    tools:context=".CartActivity"
+    android:id="@+id/rootLayout">
 
     <Button
         android:id="@+id/btn_place_order"
