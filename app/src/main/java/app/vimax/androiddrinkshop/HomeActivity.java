@@ -409,6 +409,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             //don't forget to show dialog
             builder.show();
+        } else if (id == R.id.search_menu) {
+            startActivity(new Intent(HomeActivity.this, SearchActivity.class));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

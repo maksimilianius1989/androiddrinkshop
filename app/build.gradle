@@ -63,4 +63,5 @@ dependencies {
     implementation 'com.nex3z:notification-badge:1.0.2'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation project(path: ':aFileChooser')
+    implementation 'com.github.mancj:materialsearchbar:0.8.5'
 }
